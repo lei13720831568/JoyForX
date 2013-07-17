@@ -1,0 +1,283 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E32E8025-1928-4349-8180-23C8207F2633}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>JoyForX.UI</RootNamespace>
+    <AssemblyName>JoyForX.UI</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DirectX.DirectInput, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.DirectInput.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="control\GUIControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="control\rc_input_control.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="control\Resource1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource1.resx</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MsgProcess.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RCDataStruct.cs" />
+    <Compile Include="UIData.cs" />
+    <EmbeddedResource Include="control\Resource1.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\about.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\connect.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\disconnect.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\earth-3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\load_from_file.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\read_settings1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\plane.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\quad.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\read_settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\reset.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sensor_pane1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\write_settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\write_to_file.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\airplane1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bicopter1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fw1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gimbal1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gps_background1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gps_direction1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gps_left_led_green1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gps_left_led_red1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gps_right_led_green1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gps_right_led_red1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gps_sat_green1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gps_sat_red1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\HeadingIndicator_Aircraft1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\HeadingIndicator_Background1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\HeadingWeel1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\heli_1201.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\heli_901.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hex61.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hex6x1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Horizon_Background.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Horizon_empty_Background1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Horizon_GroundSky1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\i_green_off1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\i_green_on1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\i_red_off1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\i_red_on1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Maquette_Avion1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\octo8coax1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\octo8p1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\octo8x1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pitch1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\quadp1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\quadx1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rc_control1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rcexpo1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\roll1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toggle_off1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toggle_on1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tri1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\vtail1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\y41.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\y61.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
