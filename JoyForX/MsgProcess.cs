@@ -283,7 +283,7 @@ namespace JoyForX.UI
 
                     if (!RCDataStruct.Compare(K_RC, K_RCLast))
                     {
-                        K_RCLast = K_RC;
+                        K_RCLast.FromListBytes(K_RC.ToListBytes()); ;
                         this.SendMSPCmd(MsgProcess.MSP_SET_RAW_RC, K_RC.ToListBytes());
                     }
                 }
@@ -439,9 +439,10 @@ namespace JoyForX.UI
                     if (K_RC == null) //首次检查读数
                     {
                         K_RC = new RCDataStruct();
-                        K_RCLast = K_RC;
                         K_RC.FromListBytes(data.Data);
-                        
+                        K_RCLast = new RCDataStruct();
+                        K_RCLast.FromListBytes(data.Data);
+
                     }
                     break;
                 case MSP_SET_RAW_RC:
