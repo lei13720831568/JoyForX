@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO.Ports;
+using Microsoft.DirectX.DirectInput;
 
 namespace JoyForX.UI
 {
@@ -20,23 +21,10 @@ namespace JoyForX.UI
         }
 
         public MsgProcess mp = new MsgProcess();
- 
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            string[] ports = SerialPort.GetPortNames();
-            Array.Sort(ports);
-            cbPorts.Items.AddRange(ports);
-            if (cbPorts.Items.Count > 0) cbPorts.SelectedIndex = 0;
-            UpdateUId = UpdateUI;
-            t.Elapsed += new System.Timers.ElapsedEventHandler(TimeRead);
-            this.cbRef.SelectedIndex = 0;
-            this.lbResultCount.Text = "0";
-            t.Enabled = false;
-        }
 
         System.Timers.Timer t =new System.Timers.Timer();
 
+        //定时器定时读数
         public void TimeRead(object source,System.Timers.ElapsedEventArgs e)
         {
             t.Enabled = false;
@@ -45,25 +33,35 @@ namespace JoyForX.UI
             t.Enabled = true;
         }
 
+        //打开端口
         private void btnOpenPort_Click(object sender, EventArgs e)
         {
+            if (cbJoy.Items.Count == 0)
+            {
+                MessageBox.Show("先检查手柄");
+                return;
+            }
+
             cbPorts.Enabled = false;
             btnOpenPort.Enabled = false;
             cbRef.Enabled = false;
             this.lbResultCount.Text = "0";
             Application.DoEvents();
-            mp.start(cbPorts.Text, 115200,this);
+            mp.start(cbPorts.Text.Trim(), 115200, this, cbJoy.Text.Trim());
 
             //启动刷新
             t.Interval=int.Parse(this.cbRef.Text);
             t.AutoReset = true;
             
-        }  
+        }
+
+        
 
         public delegate void UpdateUIDelegate(UIData data);
 
         public UpdateUIDelegate UpdateUId;
 
+        //更新UI
         public void UpdateUI(UIData data)
         {
             this.txtLog.Text = data.LogBuf.ToString();
@@ -76,7 +74,7 @@ namespace JoyForX.UI
                 cbRef.Enabled = true;
                 t.Stop();
 
-                this.rc_Read.SetRCInputParameters(1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000);
+                this.rc_Read.SetRCInputParameters(1000, 1500, 1500, 1500, 1500, 1500, 1500, 1500);
             }
             else
             {
@@ -96,6 +94,7 @@ namespace JoyForX.UI
             mp.FromClose();
         }
 
+        //关闭端口
         private void btnClosePort_Click(object sender, EventArgs e)
         {
             t.Enabled = false;
@@ -144,6 +143,39 @@ namespace JoyForX.UI
             //    mp.K_RC.FromListBytes(rd.ToListBytes());
             //}
             mp.SendMSPCmd(MsgProcess.MSP_SET_RAW_RC, rd.ToListBytes());
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            string[] ports = SerialPort.GetPortNames();
+          
+            Array.Sort(ports);
+            cbPorts.Items.AddRange(ports);
+            if (cbPorts.Items.Count > 0) cbPorts.SelectedIndex = 0;
+            UpdateUId = UpdateUI;
+            t.Elapsed += new System.Timers.ElapsedEventHandler(TimeRead);
+            this.cbRef.SelectedIndex = 0;
+            this.lbResultCount.Text = "0";
+            t.Enabled = false;
+
+
+
+        }
+
+
+        //选择手柄
+        private void btnCheckJoy_Click(object sender, EventArgs e)
+        {
+            DeviceList dl = Manager.GetDevices(DeviceClass.GameControl, EnumDevicesFlags.AttachedOnly);
+            if (dl != null)
+            {
+                cbJoy.Items.Clear();
+                foreach (DeviceInstance info in dl)
+                {
+                    cbJoy.Items.Add(info.ProductName);
+                }
+                cbJoy.SelectedIndex = 0;
+            }
         }
 
 

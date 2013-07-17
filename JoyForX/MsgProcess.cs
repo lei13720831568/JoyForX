@@ -6,6 +6,8 @@ using System.Collections;
 using System.Threading;
 using System.IO.Ports;
 using System.Windows.Forms;
+using Microsoft.DirectX.DirectInput;
+
 
 namespace JoyForX.UI
 {
@@ -138,6 +140,9 @@ namespace JoyForX.UI
 
         public Exception LastException = null;
 
+        public string MyJoyName;
+
+
         public MsgProcess()
         {
             SendQueue = Queue.Synchronized(new Queue());
@@ -149,8 +154,9 @@ namespace JoyForX.UI
 
         public MainForm UIForm;
 
-        public void start(string portName, int baudRate, MainForm uiobj)
+        public void start(string portName, int baudRate, MainForm uiobj,string joy)
         {
+            MyJoyName = joy;
             
             this.UIForm = uiobj;
             this.UI_data.Clear();
@@ -223,6 +229,7 @@ namespace JoyForX.UI
                     ProcessSend(SendQueue.Dequeue() as MsgData);
                 }
 
+                if (sp.IsOpen)
                 ReadSerial();
             }
 
@@ -256,13 +263,24 @@ namespace JoyForX.UI
 
         public RCDataStruct K_RC;
         public RCDataStruct K_RCLast;
-        public bool IsJoyStart=false;
+        private bool IsJoyStart=false;
+        private Device MyJoy;
         private void JoyWork() //手柄读取线程
         {
+            MyJoy=IniyJoy();
             while (IsJoyStart)
             {
                 if (K_RC != null)
                 {
+                    int joyTHR =  -(MyJoy.CurrentJoystickState.Y);
+                    int joyYAW = (MyJoy.CurrentJoystickState.X);
+                    int joyPITCH = -(MyJoy.CurrentJoystickState.Rz);
+                    int joyROLL = (MyJoy.CurrentJoystickState.Z);
+                    K_RC.THR = Linear(K_RC.THR, joyTHR,false);
+                    K_RC.YAW = Linear(K_RC.YAW, joyYAW,true);
+                    K_RC.PITCH = Linear(K_RC.PITCH, joyPITCH,true);
+                    K_RC.ROLL = Linear(K_RC.ROLL, joyROLL,true);
+
                     if (!RCDataStruct.Compare(K_RC, K_RCLast))
                     {
                         K_RCLast = K_RC;
@@ -273,6 +291,58 @@ namespace JoyForX.UI
             }
         }
 
+        //线性累加计算 
+        private short Linear(short oldvalue, int joyvalue,bool isMid)
+        {
+            short minvalue = 1000;
+            short maxvalue = 2000;
+            short result = oldvalue;
+            int add=0;
+
+           /// y=x*(x/5)+10  公式
+            if (joyvalue>0)
+             add = (joyvalue / 100) *(joyvalue / 100/5)+10;  //缩小累计量
+            else
+             add =-( (joyvalue / 100) * (joyvalue / 100/5)+10);  //缩小累计量 
+
+            short addedvalue=(short)(oldvalue + add);
+            result = addedvalue;
+            if (joyvalue == 0)
+            {
+                if (isMid) result = 1500; else result = oldvalue;
+            }
+            if (addedvalue >= maxvalue) result = maxvalue;  //约束行程
+            if (addedvalue <= minvalue) result = minvalue;  //约束行程
+
+            return result;
+        }
+        //初始化手柄
+        private Device IniyJoy()
+        {
+
+            DeviceList dl = Manager.GetDevices(DeviceClass.GameControl, EnumDevicesFlags.AttachedOnly);
+            Device joy = null;
+            foreach (DeviceInstance info in dl)
+            {
+                if (info.ProductName == this.MyJoyName)
+                {
+                    joy = new Device(info.InstanceGuid);
+                   // myJoy.SetCooperativeLevel(this.UIForm, CooperativeLevelFlags.Background | CooperativeLevelFlags.NonExclusive);//设置手柄执行级别？？好像是力反馈什么的执行级别，暂时设置成这样
+                    foreach (DeviceObjectInstance doi in joy.Objects)    //设置行程
+                    {
+                        if ((doi.ObjectId & (int)DeviceObjectTypeFlags.Axis) != 0)
+                        {
+                            joy.Properties.SetRange(ParameterHow.ById, doi.ObjectId, new InputRange(-1000, 1000));
+                        }
+                    }
+                    joy.Acquire();
+                    break;
+                }
+            }
+
+            
+            return joy;
+        }  
 
         private void ReadSerial()
         {
@@ -343,6 +413,7 @@ namespace JoyForX.UI
 
             if (sp.IsOpen)
             sp.Write(SendByte, 0, SendByte.Length);
+            Thread.Sleep(20);
         }
 
         public void ProcessRecv(MsgData data)

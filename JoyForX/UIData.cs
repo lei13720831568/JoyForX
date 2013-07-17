@@ -36,7 +36,7 @@ namespace JoyForX.UI
              Rear_Left = 1000;
              Rear_Right = 1000;
 
-             LogBuf = LogBuf.Clear();
+             LogBuf.Length = 0;
 
              ResultCount = 0;
              IsOpened=false;
