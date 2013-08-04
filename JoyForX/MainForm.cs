@@ -29,18 +29,22 @@ namespace JoyForX.UI
         {
             t.Enabled = false;
             if (mp.sp.IsOpen)
-            mp.SendMSPCmd(MsgProcess.MSP_RC, null);
+            {
+                mp.SendMSPCmd(MsgProcess.MSP_RC, null);
+                mp.SendMSPCmd(MsgProcess.MSP_MOTOR, null);
+            }
+
             t.Enabled = true;
         }
 
         //打开端口
         private void btnOpenPort_Click(object sender, EventArgs e)
         {
-            if (cbJoy.Items.Count == 0)
-            {
-                MessageBox.Show("先检查手柄");
-                return;
-            }
+            //if (cbJoy.Items.Count == 0)
+            //{
+            //    MessageBox.Show("先检查手柄");
+            //    return;
+            //}
 
             cbPorts.Enabled = false;
             btnOpenPort.Enabled = false;
@@ -87,6 +91,8 @@ namespace JoyForX.UI
 
             if (mp.K_RC != null) 
             this.rc_keep.SetRCInputParameters(mp.K_RC.THR, mp.K_RC.PITCH, mp.K_RC.ROLL, mp.K_RC.YAW, mp.K_RC.AUX1, mp.K_RC.AUX2, mp.K_RC.AUX3, mp.K_RC.AUX4);
+
+            this.motors_control1.SetMotorsIndicatorParameters(data.MotorsData.motors, null, 3);
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -149,6 +155,7 @@ namespace JoyForX.UI
         {
             string[] ports = SerialPort.GetPortNames();
           
+            
             Array.Sort(ports);
             cbPorts.Items.AddRange(ports);
             if (cbPorts.Items.Count > 0) cbPorts.SelectedIndex = 0;

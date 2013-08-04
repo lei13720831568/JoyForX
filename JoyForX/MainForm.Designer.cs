@@ -42,9 +42,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.cbJoy = new System.Windows.Forms.ComboBox();
+            this.btnCheckJoy = new System.Windows.Forms.Button();
+            this.motors_control1 = new MultiWiiGUIControls.motors_control();
             this.rc_keep = new MultiWiiGUIControls.rc_input_control();
             this.rc_Read = new MultiWiiGUIControls.rc_input_control();
-            this.btnCheckJoy = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnOpenPort
@@ -186,6 +187,24 @@
             this.cbJoy.Size = new System.Drawing.Size(121, 20);
             this.cbJoy.TabIndex = 33;
             // 
+            // btnCheckJoy
+            // 
+            this.btnCheckJoy.Location = new System.Drawing.Point(200, 64);
+            this.btnCheckJoy.Name = "btnCheckJoy";
+            this.btnCheckJoy.Size = new System.Drawing.Size(75, 23);
+            this.btnCheckJoy.TabIndex = 34;
+            this.btnCheckJoy.Text = "检查手柄";
+            this.btnCheckJoy.UseVisualStyleBackColor = true;
+            this.btnCheckJoy.Click += new System.EventHandler(this.btnCheckJoy_Click);
+            // 
+            // motors_control1
+            // 
+            this.motors_control1.Location = new System.Drawing.Point(331, 31);
+            this.motors_control1.Name = "motors_control1";
+            this.motors_control1.Size = new System.Drawing.Size(174, 213);
+            this.motors_control1.TabIndex = 35;
+            this.motors_control1.Text = "motors_control1";
+            // 
             // rc_keep
             // 
             this.rc_keep.Location = new System.Drawing.Point(545, 29);
@@ -202,21 +221,12 @@
             this.rc_Read.TabIndex = 24;
             this.rc_Read.Text = "rc_input_control1";
             // 
-            // btnCheckJoy
-            // 
-            this.btnCheckJoy.Location = new System.Drawing.Point(200, 64);
-            this.btnCheckJoy.Name = "btnCheckJoy";
-            this.btnCheckJoy.Size = new System.Drawing.Size(75, 23);
-            this.btnCheckJoy.TabIndex = 34;
-            this.btnCheckJoy.Text = "检查手柄";
-            this.btnCheckJoy.UseVisualStyleBackColor = true;
-            this.btnCheckJoy.Click += new System.EventHandler(this.btnCheckJoy_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(975, 472);
+            this.Controls.Add(this.motors_control1);
             this.Controls.Add(this.btnCheckJoy);
             this.Controls.Add(this.cbJoy);
             this.Controls.Add(this.label4);
@@ -262,6 +272,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox cbJoy;
         private System.Windows.Forms.Button btnCheckJoy;
+        private MultiWiiGUIControls.motors_control motors_control1;
     }
 }
 

@@ -174,6 +174,7 @@ namespace JoyForX.UI
             {
                 sp.BaudRate = baudRate;
                 sp.PortName = portName;
+                
             }
             try
             {
@@ -191,6 +192,7 @@ namespace JoyForX.UI
 
             RecevicerThread.Start();
             SerialThread.Start();
+            if (!string.IsNullOrEmpty(joy))
             JoyThread.Start();
             
         }
@@ -265,6 +267,8 @@ namespace JoyForX.UI
         public RCDataStruct K_RCLast;
         private bool IsJoyStart=false;
         private Device MyJoy;
+
+
         private void JoyWork() //手柄读取线程
         {
             MyJoy=IniyJoy();
@@ -277,9 +281,9 @@ namespace JoyForX.UI
                     int joyPITCH = -(MyJoy.CurrentJoystickState.Rz);
                     int joyROLL = (MyJoy.CurrentJoystickState.Z);
                     K_RC.THR = Linear(K_RC.THR, joyTHR,false);
-                    K_RC.YAW = Linear(K_RC.YAW, joyYAW,true);
-                    K_RC.PITCH = Linear(K_RC.PITCH, joyPITCH,true);
-                    K_RC.ROLL = Linear(K_RC.ROLL, joyROLL,true);
+                    K_RC.YAW = Linear(K_RC.YAW, joyYAW, true);//:(short)(joyYAW/2+1500);
+                    K_RC.PITCH =Linear(K_RC.PITCH, joyPITCH, true);//:(short) (joyPITCH/2+1500);
+                    K_RC.ROLL = Linear(K_RC.ROLL, joyROLL, true);//(short)(joyROLL/2+1500);
 
                     if (!RCDataStruct.Compare(K_RC, K_RCLast))
                     {
@@ -291,13 +295,18 @@ namespace JoyForX.UI
             }
         }
 
+
         //线性累加计算 
         private short Linear(short oldvalue, int joyvalue,bool isMid)
         {
             short minvalue = 1000;
             short maxvalue = 2000;
+            short midvalue=(short)((maxvalue-minvalue)/2+minvalue);
             short result = oldvalue;
+            short joypos = (short)((joyvalue / 2) + midvalue);
             int add=0;
+
+
 
            /// y=x*(x/5)+10  公式
             if (joyvalue>0)
@@ -305,14 +314,30 @@ namespace JoyForX.UI
             else
              add =-( (joyvalue / 100) * (joyvalue / 100/5)+10);  //缩小累计量 
 
+            
+
             short addedvalue=(short)(oldvalue + add);
             result = addedvalue;
-            if (joyvalue == 0)
-            {
-                if (isMid) result = 1500; else result = oldvalue;
-            }
+
             if (addedvalue >= maxvalue) result = maxvalue;  //约束行程
             if (addedvalue <= minvalue) result = minvalue;  //约束行程
+
+            if (joyvalue == 0)
+            {
+                if (isMid)
+                {
+                    short midAdd = (short)((1500 - oldvalue) / 2);
+                    //if (Math.Abs(midAdd - 1500) <= 100) result = midAdd;
+                    //else
+                    result = (short)(1500 - midAdd);
+                }
+                else result = oldvalue;
+            }
+            else
+            {
+                if ((System.Math.Abs(oldvalue - joypos) < 20)&&(joypos>1100&&joypos<1900))
+                    return oldvalue;
+            }
 
             return result;
         }
@@ -382,6 +407,7 @@ namespace JoyForX.UI
                                 }
 
                             }
+                            else break;
                         }
                         else
                         {
@@ -432,10 +458,17 @@ namespace JoyForX.UI
                 case C_Error:
                     UI_data.LogBuf.Insert(0,data.GetCustomData()+Environment.NewLine);
                     break;
+                case MSP_MOTOR:
+                    byte[] md =data.Data.ToArray();
+                    for (int i = 0; i <8; i++)
+                    {
+                        UI_data.MotorsData.motors[i] = BitConverter.ToInt16(md, i*2);
+                    }
+                    break;
                 case MSP_RC:
                     UI_data.RCData.FromListBytes(data.Data);
 
-                    UI_data.LogBuf.Insert(0,string.Format("GET_RC Result:{0}"+Environment.NewLine, data.GetMSPIntData()));
+                 //   UI_data.LogBuf.Insert(0,string.Format("GET_RC Result:{0}"+Environment.NewLine, data.GetMSPIntData()));
                     if (K_RC == null) //首次检查读数
                     {
                         K_RC = new RCDataStruct();

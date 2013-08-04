@@ -11,10 +11,7 @@ namespace JoyForX.UI
 
         public RCDataStruct RC_KeepData;
 
-        public short Front_Left ;
-        public short Front_Right ;
-        public short Rear_Left ;
-        public short Rear_Right;
+        public MotorsStruct MotorsData;
 
         public StringBuilder LogBuf ;
 
@@ -24,17 +21,14 @@ namespace JoyForX.UI
         public UIData()
         {
             LogBuf = new StringBuilder();
+            MotorsData = new MotorsStruct();
+            MotorsData.motors=new int[8];
             init();
         }
 
         private void init()
         {
              RCData = new RCDataStruct();
-
-             Front_Left = 1000;
-             Front_Right = 1000;
-             Rear_Left = 1000;
-             Rear_Right = 1000;
 
              LogBuf.Length = 0;
 
